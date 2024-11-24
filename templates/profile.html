@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{%block content%}
+<!DOCTYPE html>
+<head>
+    <title>LMS</title>
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons"
+    rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    img{
+        border-radius: 50%;
+    }#heading{
+        color: green;
+    }
+  </style>
+</head>
+
+    <div class="container">
+        
+        
+        
+        <hr>
+        <h4><b>Profile</b></h4>
+        <div class="container text-center">
+            <div class="row">
+              {%if current_user.pic%}
+              <div class="col">
+                <img src="static/uploads/{{current_user.pic}}" width="250px" height="250px">
+              </div>
+              {%else%}
+              <div class="col">
+                <img src="static/de.jpg" width="250px" height="250px">
+              </div>
+              {%endif%}
+              <div class="col">
+                <div class="mb-3 row">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">First Name:</label>
+                  <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputPassword" value="{{current_user.first_name}}" disabled>
+                  </div>
+              </div><div class="mb-3 row">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">Last Name:</label>
+                  <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputPassword" value="{{current_user.last_name}}" disabled>
+                  </div>
+              </div>
+              <div class="mb-3 row">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">Email:</label>
+                  <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputPassword" value="{{current_user.email}}" disabled>
+                  </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Grade</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputPassword" value="{{current_user.grade}}" disabled>
+                </div>
+                </div>
+                <div class="mb-3 row">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Telephone no:</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputPassword" value="{{current_user.t_no}}" disabled>
+                </div>
+            </div>
+              <a href="/update" type="button" class="btn btn-outline-primary">Update Profile</a>
+              </div>
+              </div>
+            <footer class="py-3 my-4">
+              <hr>
+              <p class="text-center text-body-secondary">&copy; 2024 Company, Inc</p>
+            </footer>
+    </div>
+</body>
+</html>
+
+
+{%endblock%}

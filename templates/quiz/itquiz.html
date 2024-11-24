@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>IT Quiz</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* Custom CSS for IT Quiz */
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .card-body {
+            background-color: #ffffff;
+        }
+
+        .btn {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .question {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .answer-options {
+            margin-top: 15px;
+        }
+
+        .answer-option {
+            margin-bottom: 10px;
+        }
+
+        .quiz-footer {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .quiz-footer a {
+            text-decoration: none;
+            font-size: 1.1rem;
+            color: #007bff;
+        }
+
+        .quiz-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <!-- Quiz Header -->
+    <div class="quiz-header">
+        <h1 class="display-4">IT Quiz</h1>
+        <p class="lead">Test your knowledge of Information Technology!</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('it_quiz.itscore') }}">
+
+        <!-- Question 1 -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="question">What does HTML stand for?</p>
+                <div class="answer-options">
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question1" id="answer1A" value="A">
+                        <label class="form-check-label" for="answer1A">Hyper Text Markup Language</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question1" id="answer1B" value="B">
+                        <label class="form-check-label" for="answer1B">Home Tool Markup Language</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question1" id="answer1C" value="C">
+                        <label class="form-check-label" for="answer1C">Hyperlinks and Text Markup Language</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="question">Which programming language is known as the "mother of all languages"?</p>
+                <div class="answer-options">
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question2" id="answer2A" value="A">
+                        <label class="form-check-label" for="answer2A">C</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question2" id="answer2B" value="B">
+                        <label class="form-check-label" for="answer2B">Assembly</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question2" id="answer2C" value="C">
+                        <label class="form-check-label" for="answer2C">Fortran</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="question">What is the primary function of the ALU in a computer?</p>
+                <div class="answer-options">
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question3" id="answer3A" value="A">
+                        <label class="form-check-label" for="answer3A">Arithmetic and Logic Operations</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question3" id="answer3B" value="B">
+                        <label class="form-check-label" for="answer3B">Audio Line Utility</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question3" id="answer3C" value="C">
+                        <label class="form-check-label" for="answer3C">Automated Logic Unit</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="question">Which of the following is a programming language?</p>
+                <div class="answer-options">
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question4" id="answer4A" value="A">
+                        <label class="form-check-label" for="answer4A">Python</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question4" id="answer4B" value="B">
+                        <label class="form-check-label" for="answer4B">Microsoft</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question4" id="answer4C" value="C">
+                        <label class="form-check-label" for="answer4C">Intel</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="question">Which device is used to store data in a computer?</p>
+                <div class="answer-options">
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question5" id="answer5A" value="A">
+                        <label class="form-check-label" for="answer5A">CPU</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question5" id="answer5B" value="B">
+                        <label class="form-check-label" for="answer5B">Hard Disk</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question5" id="answer5C" value="C">
+                        <label class="form-check-label" for="answer5C">RAM</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="question">Which protocol is used for secure communication over a computer network?</p>
+                <div class="answer-options">
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question6" id="answer6A" value="A">
+                        <label class="form-check-label" for="answer6A">HTTP</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question6" id="answer6B" value="B">
+                        <label class="form-check-label" for="answer6B">HTTPS</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question6" id="answer6C" value="C">
+                        <label class="form-check-label" for="answer6C">FTP</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="question">What does the "RAM" in a computer stand for?</p>
+                <div class="answer-options">
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question7" id="answer7A" value="A">
+                        <label class="form-check-label" for="answer7A">Random Access Memory</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question7" id="answer7B" value="B">
+                        <label class="form-check-label" for="answer7B">Read Access Memory</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question7" id="answer7C" value="C">
+                        <label class="form-check-label" for="answer7C">Read Active Memory</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 8 -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="question">What is the full form of the acronym "BIOS" in computers?</p>
+                <div class="answer-options">
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question8" id="answer8A" value="A">
+                        <label class="form-check-label" for="answer8A">Basic Integrated Operating System</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question8" id="answer8B" value="B">
+                        <label class="form-check-label" for="answer8B">Basic Input Output System</label>
+                    </div>
+                    <div class="form-check answer-option">
+                        <input class="form-check-input" type="radio" name="question8" id="answer8C" value="C">
+                        <label class="form-check-label" for="answer8C">Binary Integrated Operating System</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 1 -->
+        <div class="card shadow-sm">
+          <div class="card-body">
+              <p class="question">What is the full form of "URL"?</p>
+              <div class="answer-options">
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question9" id="answer1A" value="A">
+                      <label class="form-check-label" for="answer1A">Uniform Resource Locator</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question9" id="answer1B" value="B">
+                      <label class="form-check-label" for="answer1B">Universal Resource Locator</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question9" id="answer1C" value="C">
+                      <label class="form-check-label" for="answer1C">Uniform Regional Locator</label>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="card shadow-sm">
+          <div class="card-body">
+              <p class="question">Which of these is an example of an input device?</p>
+              <div class="answer-options">
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question10" id="answer2A" value="A">
+                      <label class="form-check-label" for="answer2A">monitor</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question10" id="answer2B" value="B">
+                      <label class="form-check-label" for="answer2B">keyboard</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question10" id="answer2C" value="C">
+                      <label class="form-check-label" for="answer2C">printer</label>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="card shadow-sm">
+          <div class="card-body">
+              <p class="question">8.Who is known as the father of the computer?</p>
+              <div class="answer-options">
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question11" id="answer3A" value="A">
+                      <label class="form-check-label" for="answer3A"> Charles Babbage</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question11" id="answer3B" value="B">
+                      <label class="form-check-label" for="answer3B">Alan Turing</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question11" id="answer3C" value="C">
+                      <label class="form-check-label" for="answer3C">John von Neumann</label>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Question 4 -->
+      <div class="card shadow-sm">
+          <div class="card-body">
+              <p class="question">What does "HTTP" stand for in a web address?</p>
+              <div class="answer-options">
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question12" id="answer4A" value="A">
+                      <label class="form-check-label" for="answer4A">Hypertext Transfer Protocol </label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question12" id="answer4B" value="B">
+                      <label class="form-check-label" for="answer4B">Hyper Terminal Text Protocol</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question12" id="answer4C" value="C">
+                      <label class="form-check-label" for="answer4C">Hyper Transfer Text Protocol</label>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Question 5 -->
+      <div class="card shadow-sm">
+          <div class="card-body">
+              <p class="question">Which device is used to display the output in a computer?</p>
+              <div class="answer-options">
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question13" id="answer5A" value="A">
+                      <label class="form-check-label" for="answer5A">CPU</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question13" id="answer5B" value="B">
+                      <label class="form-check-label" for="answer5B">monitor</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question13" id="answer5C" value="C">
+                      <label class="form-check-label" for="answer5C">RAM</label>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Question 6 -->
+      <div class="card shadow-sm">
+          <div class="card-body">
+              <p class="question"> What is the main function of the CPU?</p>
+              <div class="answer-options">
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question14" id="answer6A" value="A">
+                      <label class="form-check-label" for="answer6A">stores data</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question14" id="answer6B" value="B">
+                      <label class="form-check-label" for="answer6B">process data</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question14" id="answer6C" value="C">
+                      <label class="form-check-label" for="answer6C">contrls input and output</label>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Question 7 -->
+      <div class="card shadow-sm">
+          <div class="card-body">
+              <p class="question">Which of these is a software?</p>
+              <div class="answer-options">
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question15" id="answer7A" value="A">
+                      <label class="form-check-label" for="answer7A">Computer Mouse</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question15" id="answer7B" value="B">
+                      <label class="form-check-label" for="answer7B">Microsoft Word</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question15" id="answer7C" value="C">
+                      <label class="form-check-label" for="answer7C">Keyboard</label>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Question 8 -->
+      <div class="card shadow-sm">
+          <div class="card-body">
+              <p class="question">Which company developed the Windows operating system?</p>
+              <div class="answer-options">
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question16" id="answer8A" value="A">
+                      <label class="form-check-label" for="answer8A">microsoft</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question16" id="answer8B" value="B">
+                      <label class="form-check-label" for="answer8B">apple</label>
+                  </div>
+                  <div class="form-check answer-option">
+                      <input class="form-check-input" type="radio" name="question16" id="answer8C" value="C">
+                      <label class="form-check-label" for="answer8C">intel</label>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- Question 17 -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="question">What does "IP" stand for in networking?</p>
+            <div class="answer-options">
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question17" id="answer17A" value="A">
+                    <label class="form-check-label" for="answer17A">Internet Protocol</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question17" id="answer17B" value="B">
+                    <label class="form-check-label" for="answer17B">Internal Protocol</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question17" id="answer17C" value="C">
+                    <label class="form-check-label" for="answer17C">Internet Provider</label>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Question 18 -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="question">Which of the following is a popular database management system?</p>
+            <div class="answer-options">
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question18" id="answer18A" value="A">
+                    <label class="form-check-label" for="answer18A">MySQL</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question18" id="answer18B" value="B">
+                    <label class="form-check-label" for="answer18B">HTML</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question18" id="answer18C" value="C">
+                    <label class="form-check-label" for="answer18C">Python</label>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Question 19 -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="question">What is the function of an operating system?</p>
+            <div class="answer-options">
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question19" id="answer19A" value="A">
+                    <label class="form-check-label" for="answer19A">To manage hardware and software resources</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question19" id="answer19B" value="B">
+                    <label class="form-check-label" for="answer19B">To store data</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question19" id="answer19C" value="C">
+                    <label class="form-check-label" for="answer19C">To browse the internet</label>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Question 20 -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="question">Which programming language is used to build Android applications?</p>
+            <div class="answer-options">
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question20" id="answer20A" value="A">
+                    <label class="form-check-label" for="answer20A">Java</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question20" id="answer20B" value="B">
+                    <label class="form-check-label" for="answer20B">Swift</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question20" id="answer20C" value="C">
+                    <label class="form-check-label" for="answer20C">C#</label>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Question 21 -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="question">What is the function of a firewall?</p>
+            <div class="answer-options">
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question21" id="answer21A" value="A">
+                    <label class="form-check-label" for="answer21A">Protects the network from unauthorized access</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question21" id="answer21B" value="B">
+                    <label class="form-check-label" for="answer21B">Protects the CPU</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question21" id="answer21C" value="C">
+                    <label class="form-check-label" for="answer21C">Protects against physical damage</label>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Question 22 -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="question">What does "USB" stand for?</p>
+            <div class="answer-options">
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question22" id="answer22A" value="A">
+                    <label class="form-check-label" for="answer22A">Universal Serial Bus</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question22" id="answer22B" value="B">
+                    <label class="form-check-label" for="answer22B">Unified Storage Bus</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question22" id="answer22C" value="C">
+                    <label class="form-check-label" for="answer22C">Unified Serial Bus</label>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Question 23 -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="question">What is the meaning of the acronym "VPN"?</p>
+            <div class="answer-options">
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question23" id="answer23A" value="A">
+                    <label class="form-check-label" for="answer23A">Virtual Private Network</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question23" id="answer23B" value="B">
+                    <label class="form-check-label" for="answer23B">Virtual Public Network</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question23" id="answer23C" value="C">
+                    <label class="form-check-label" for="answer23C">Variable Private Network</label>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Question 24 -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="question">Which company created the first computer mouse?</p>
+            <div class="answer-options">
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question24" id="answer24A" value="A">
+                    <label class="form-check-label" for="answer24A">IBM</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question24" id="answer24B" value="B">
+                    <label class="form-check-label" for="answer24B">Microsoft</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question24" id="answer24C" value="C">
+                    <label class="form-check-label" for="answer24C">Xerox</label>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Question 25 -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="question">What does "AI" stand for in technology?</p>
+            <div class="answer-options">
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question25" id="answer25A" value="A">
+                    <label class="form-check-label" for="answer25A">Artificial Intelligence</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question25" id="answer25B" value="B">
+                    <label class="form-check-label" for="answer25B">Automated Intelligence</label>
+                </div>
+                <div class="form-check answer-option">
+                    <input class="form-check-input" type="radio" name="question25" id="answer25C" value="C">
+                    <label class="form-check-label" for="answer25C">Application Interface</label>
+                </div>
+            </div>
+        </div>
+      </div>
+
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="quiz-footer">
+          <button type="submit" class="btn btn-primary">Submit Quiz</button>
+        
+        </div>
+        <a href="{{url_for('it_quiz.itback')}}" class="btn btn-primary">Back</a>
+
+    </form>
+
+</div>
+
+<!-- Bootstrap JS (Optional for interactivity) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

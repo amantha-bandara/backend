@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<head>
+    <title>LMS</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        #heading {
+            text-decoration: underline;
+            color: rgb(0, 120, 138);
+            text-align: center;
+        }
+        #security {
+            color: green;
+        }
+        #text {
+            color: red;
+        }
+        * {
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: url(static/e.jpg) no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        .registor {
+            width: 420px;
+            background: white;
+            border: 2px solid rgba(255, 255, 255, .2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+            color: #333;
+            border-radius: 10px;
+            padding: 30px 40px;
+        }
+        .registor h1 {
+            font-size: 36px;
+            text-align: center;
+            color: #333;
+        }
+        .registor .input-box {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            margin: 30px 0;
+        }
+        .input-box input {
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5; /* Light background for better visibility */
+            border: 2px solid rgba(255, 255, 255, .2); /* Border color */
+            border-radius: 40px;
+            font-size: 16px;
+            color: black; /* Text color for input */
+            padding: 20px 45px 20px 20px;
+        }
+        .input-box input::placeholder {
+            color: #aaa; /* Light gray placeholder color */
+        }
+        .input-box input:focus::placeholder {
+            color: #666; /* Slightly darker gray when input is focused */
+        }
+        .input-box i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            color: #0078A8;
+            z-index: 1; /* Make sure icon doesn't overlap placeholder */
+        }
+        .registor .butn {
+            width: 100px;
+            height: 45px;
+            background: #0078A8;
+            border: none;
+            outline: none;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            font-weight: 600;
+        }
+        #message {
+            position: absolute;
+            bottom: -40px;
+            color: #fff;
+            font-size: 15px;
+            display: none;
+        }
+        #message2 {
+            position: absolute;
+            bottom: -40px;
+            color: #fff;
+            font-size: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <br><center>
+        <div class="registor">
+            <form method="POST">
+                <h1>Register</h1>
+                <div class="input-box">
+                    <input type="text" placeholder="First name" name="f_name" required>
+                </div>
+                <div class="input-box">
+                    <input type="text" placeholder="Last name" name="l_name" required>
+                </div>
+                <div class="input-box">
+                    <input type="text" placeholder="Grade" name="grade" required>
+                    <p id="message2">The password is </p>
+                </div>
+                <div class="input-box">
+                    <input type="text" placeholder="Telephone number" name="t_no" required>
+                </div>
+                <div class="input-box">
+                    <input type="email" placeholder="Email" name="email" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password" name="password" id="password" required>
+                    <i class='bx bxs-lock-alt'></i>
+                    <p id="message"> The password is <span id="strength"></span></p>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Confirm Password" name="password2" id="password2" required>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <div class="input-box">
+                    <input type="text" placeholder="NIC" name="NIC">
+                    <i class='bx bxs-lock-alt'></i>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                </div>
+
+                <button type="submit" class="butn">Register</button>
+            </form>
+        </div>
+        </center>
+    </div>
+
+    <script>
+        var pass = document.getElementById("password");
+        var msg = document.getElementById("message");
+        var str = document.getElementById("strength");
+
+        pass.addEventListener('input', () => {
+            if (pass.value.length > 0) {
+                msg.style.display = 'block';
+            } else {
+                msg.style.display = 'none';
+            }
+            if (pass.value.length < 4) {
+                str.innerHTML = "weak";
+                msg.style.color = "#ff5925";
+            } else if (pass.value.length >= 4 && pass.value.length < 8) {
+                str.innerHTML = "medium";
+                msg.style.color = "yellow";
+            }
+            if (pass.value.length >= 8) {
+                str.innerHTML = "strong";
+                msg.style.color = "#26d730";
+            }
+        });
+    </script>
+</body>
+{% endblock %}

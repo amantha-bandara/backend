@@ -1,0 +1,41 @@
+{% include 'admin/admin.html' %}
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Table for Statistics -->
+    <div class="my-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Statistic</th>
+                        <th>Count</th>
+                        <th>Icon</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Total Users Row -->
+                    <tr>
+                        <td>Total Users</td>
+                        <td><h4 class="font-weight-bold">{{ total_user }}</h4></td>
+                        <td><i class="fas fa-users fa-3x text-success"></i></td>
+                    </tr>
+                    <!-- Approved Users Row -->
+                    <tr>
+                        <td>Approved Users</td>
+                        <td><h4 class="font-weight-bold">{{ total_approved }}</h4></td>
+                        <td><i class="fas fa-check-circle fa-3x text-warning"></i></td>
+                    </tr>
+                    <!-- Disapproved Users Row -->
+                    <tr>
+                        <td>Disapproved Users</td>
+                        <td><h4 class="font-weight-bold">{{ total_pending }}</h4></td>
+                        <td><i class="fas fa-times-circle fa-3x text-danger"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

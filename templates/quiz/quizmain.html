@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{%block content%}   
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Quiz page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons"
+        rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* Custom CSS */
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+
+    h1, p {
+      color: #333;
+    }
+
+    .card {
+      border: none;
+      border-radius: 10px;
+    }
+
+    .card img {
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .card-body {
+      background-color: #ffffff;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .card-text {
+      color: #6c757d;
+    }
+
+    .btn {
+      background-color: #007bff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .container {
+      max-width: 960px;
+    }
+
+    .row {
+      margin-top: 30px;
+    }
+
+    .card img {
+      object-fit: cover;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container py-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+      <h1 class="display-4">Quiz Selection</h1>
+      <p class="lead">Choose your quiz topic below to start learning!</p>
+    </div>
+
+    <!-- Row for quiz sections -->
+    <div class="row g-4">
+      <!-- IT Quiz Section -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <img src="static/it.png" class="card-img-top" alt="IT Quiz">
+          <div class="card-body">
+            <h5 class="card-title">IT Quiz</h5>
+            <p class="card-text">Test your knowledge of Information Technology! Topics include programming, networks, and security.</p>
+            <a href="{{url_for('it_quiz.it')}}" class="btn btn-primary">Start IT Quiz</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Science Quiz Section -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <img src="static/sci.jpg" class="card-img-top" alt="Science Quiz">
+          <div class="card-body">
+            <h5 class="card-title">Science Quiz</h5>
+            <p class="card-text">Challenge yourself with questions about physics, chemistry, biology, and more!</p>
+            <a href="{{url_for('squiz.sciequiz')}}" class="btn btn-primary">Start Science Quiz</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (Optional for interactivity) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{%endblock%}
