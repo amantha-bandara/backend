@@ -1,219 +1,215 @@
 {% extends 'base.html' %}
 {% block content %}
-<!DOCTYPE html>
-<head>
-    <title>LMS</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        * {
-            margin: 0;
-            box-sizing: border-box;
-        }
+    <!DOCTYPE html>
+    <head>
+        <title>LMS</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <style>
+            * {
+                margin: 0;
+                box-sizing: border-box;
+            }
 
-        #heading {
-            color: rgb(0, 120, 138);
-            text-align: center;
-        }
+            #heading {
+                color: rgb(0, 120, 138);
+                text-align: center;
+            }
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: url(static/e.jpg) no-repeat;
-            background-size: cover;
-            background-position: center;
-        }
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                background: url(static/e.jpg) no-repeat;
+                background-size: cover;
+                background-position: center;
+            }
 
-        .login {
-            width: 420px;
-            background: white;
-            border: 2px solid rgba(255, 255, 255, .2);
-            border-radius: 10px;
-            padding: 30px 40px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, .1);
-        }
+            .login {
+                width: 420px;
+                background: transparent;
+                border: 2px solid rgba(255, 255, 255, .2);
+                backdrop-filter: blur(20px);
+                box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+                color: #fff;
+                border-radius: 10px;
+                padding: 30px 40px;
+            }
 
-        .login h1 {
-            font-size: 36px;
-            text-align: center;
-            color: #0078A8;
-        }
+            .login h1 {
+                font-size: 36px;
+                text-align: center;
+            }
 
-        .login .input-box {
-            position: relative;
-            width: 100%;
-            height: 50px;
-            margin: 20px 0;
-        }
+            .login .input-box {
+                position: relative;
+                width: 100%;
+                height: 50px;
+                margin: 30px 0;
+            }
 
-        .input-box input {
-            width: 100%;
-            height: 100%;
-            background: #f5f5f5;
-            border: none;
-            outline: none;
-            border-radius: 40px;
-            font-size: 16px;
-            color: #333;
-            padding: 15px 45px 15px 20px;
-            transition: all 0.3s ease;
-        }
+            .input-box input {
+                width: 100%;
+                height: 100%;
+                background: transparent;
+                border: none;
+                outline: none;
+                border: 2px solid rgba(255, 255, 255, .2);
+                border-radius: 40px;
+                font-size: 16px;
+                color: white;
+                padding: 20px 45px 20px 20px;
+            }
 
-        .input-box input::placeholder {
-            color: #aaa;
-        }
+            .input-box input::placeholder {
+                color: white;
+            }
 
-        .input-box input:focus {
-            background: #fff;
-            box-shadow: 0 0 5px rgba(0, 120, 138, 0.2);
-        }
+            .input-box i {
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translate(-50%);
+                font-size: 20px;
+            }
 
-        .input-box i {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 20px;
-            color: #0078A8;
-        }
+            .login .butn {
+                width: 100px;
+                height: 45px;
+                background: #fff;
+                border: none;
+                outline: none;
+                border-radius: 40px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+                cursor: pointer;
+                font-size: 16px;
+                color: #333;
+                font-weight: 600;
+            }
 
-        .login .butn {
-            width: 70%; /* Reduced the width to 70% */
-            height: 45px;
-            background: #0078A8; /* Login button color */
-            border: none;
-            outline: none;
-            border-radius: 40px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+            /* Custom Google Sign-In Button */
+            .google-btn {
+                width: 100%;
+                height: 45px;
+                background-color: #4285F4;
+                border: none;
+                outline: none;
+                border-radius: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                font-size: 16px;
+                color: white;
+                font-weight: 600;
+                margin-top: 15px;
+                text-decoration: none;
+            }
 
-        .login .butn:hover {
-            background: #005f73; /* Darker blue on hover */
-        }
+            .google-btn i {
+                margin-right: 10px;
+            }
 
-        /* Custom Google Sign-In Button */
-        .google-btn {
-            width: 100%;
-            height: 45px;
-            background-color: #4285F4;
-            border: none;
-            outline: none;
-            border-radius: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 16px;
-            color: white;
-            font-weight: 600;
-            margin-top: 15px;
-            text-decoration: none;
-            transition: background 0.3s ease;
-        }
+            .google-btn:hover {
+                background-color: #357AE8;
+            }
 
-        .google-btn:hover {
-            background-color: #357AE8;
-        }
+            .google-btn span {
+                font-weight: 600;
+            }
 
-        .google-btn i {
-            margin-right: 10px;
-        }
+            /* Custom LinkedIn Sign-In Button */
+            .linkedin-btn {
+                width: 100%;
+                height: 45px;
+                background-color: #0077B5;
+                border: none;
+                outline: none;
+                border-radius: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                font-size: 16px;
+                color: white;
+                font-weight: 600;
+                margin-top: 15px;
+                text-decoration: none;
+            }
 
-        /* Custom LinkedIn Sign-In Button */
-        .linkedin-btn {
-            width: 100%;
-            height: 45px;
-            background-color: #0077B5; /* LinkedIn's signature color */
-            border: none;
-            outline: none;
-            border-radius: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 16px;
-            color: white;
-            font-weight: 600;
-            margin-top: 15px;
-            text-decoration: none;
-            transition: background 0.3s ease;
-        }
+            .linkedin-btn i {
+                margin-right: 10px;
+            }
 
-        .linkedin-btn:hover {
-            background-color: #005C8A; /* Darker LinkedIn color on hover */
-        }
+            .linkedin-btn:hover {
+                background-color: #005C8A;
+            }
 
-        .login-links {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            margin-top: 10px;
-        }
+            .login-links {
+                display: flex;
+                justify-content: space-between;
+                font-size: 14px;
+                margin-top: 10px;
+            }
 
-        .login-links a {
-            color: #0078A8;
-            text-decoration: none;
-        }
+            .login-links a {
+                color: white;
+                text-decoration: none;
+            }
 
-        .login-links a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <br><br><br><br><br><br>
-        <center>
-        <div class="login">
-            <form method="POST">
-                
-                <h1>Login</h1>
-                <div class="input-box">
-                    <input type="email" placeholder="Email" name="email" required>
-                    <i class='bx bxs-user'></i>
-                </div>
-                <div class="input-box">
-                    <input type="password" placeholder="Password" name="password" required>
-                    <i class='bx bxs-lock-alt'></i>
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                </div>
+            .login-links a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <br><br><br><br><br><br>
+            <center>
+            <div class="login">
+                <form method="POST">
+                    
+                    <h1>Login</h1>
+                    <div class="input-box">
+                        <input type="email" placeholder="Email" name="email" required>
+                        <i class='bx bxs-user'></i>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" placeholder="Password" name="password" required>
+                        <i class='bx bxs-lock-alt'></i>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    </div>
 
-                <button type="submit" class="butn">Login</button>
+                    <button type="submit" class="butn">Login</button>
 
-                <!-- Google Sign-In Button -->
-                <a href="{{ url_for('login_google') }}" class="google-btn">
-                    <i class="fab fa-google"></i> <span>Sign in with Google</span>
-                </a>
+                    <!-- Google Sign-In Button -->
+                    <a href="{{ url_for('login_google') }}" class="google-btn">
+                        <i class="fab fa-google"></i> <span>Sign in with Google</span>
+                    </a>
 
-                <!-- LinkedIn Sign-In Button -->
-                <a href="#" class="linkedin-btn">
-                    <i class="fab fa-linkedin-in"></i> <span>Sign in with LinkedIn</span>
-                </a>
+                    <!-- LinkedIn Sign-In Button -->
+                    <a href="#" class="linkedin-btn">
+                        <i class="fab fa-linkedin-in"></i> <span>Sign in with LinkedIn</span>
+                    </a>
 
-                <div class="login-links">
-                    <a href="{{ url_for('reg') }}">Not a user? Register</a>
-                    <a href="#">Forgot Password?</a>
-                </div>
-            </form>
+                    <div class="login-links">
+                        <a href="{{ url_for('reg') }}">Not a user? Register</a>
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                </form>
+            </div>
+            </center>
         </div>
-        </center>
-    </div>
-</body>
-</html>
+    </body>
+    </html>
 {% endblock %}
-

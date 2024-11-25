@@ -91,7 +91,7 @@
       <!-- IT Quiz Section -->
       <div class="col-md-6">
         <div class="card shadow-sm">
-          <img src="static/it.png" class="card-img-top" alt="IT Quiz">
+          <img src="{{ url_for('static', filename='it.png') }}"  class="card-img-top" alt="IT Quiz">
           <div class="card-body">
             <h5 class="card-title">IT Quiz</h5>
             <p class="card-text">Test your knowledge of Information Technology! Topics include programming, networks, and security.</p>
@@ -103,7 +103,7 @@
       <!-- Science Quiz Section -->
       <div class="col-md-6">
         <div class="card shadow-sm">
-          <img src="static/sci.jpg" class="card-img-top" alt="Science Quiz">
+          <img src="{{ url_for('static', filename='sci.jpg') }}" class="card-img-top" alt="Science Quiz">
           <div class="card-body">
             <h5 class="card-title">Science Quiz</h5>
             <p class="card-text">Challenge yourself with questions about physics, chemistry, biology, and more!</p>

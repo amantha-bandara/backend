@@ -19,7 +19,6 @@ import hashlib
 import requests
 import sendgrid
 from sendgrid.helpers.mail import Mail, Email, To, Content
-from sendgrid import SendGridAPIClient
 
 app = Flask(__name__)
 
@@ -33,11 +32,11 @@ app.config['SERVER_NAME'] = '127.0.0.1:5000'
 app.config['SESSION_COOKIE_NAME'] = 'google-login-session'
 app.config['WTF_CSRF_ENABLED'] = True
 
-
+ 
 images = UploadSet('images', IMAGES)
 configure_uploads(app, images)
 
-
+# Initialize extensions
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 oauth = OAuth(app)
@@ -54,14 +53,14 @@ def generate_nonce():
 
 def generate_csrf_token():
     """Generate a CSRF token using the session data."""
-    csrf_token = hashlib.sha256(os.urandom(64)).hexdigest()  
-    session['_csrf_token'] = csrf_token  
+    csrf_token = hashlib.sha256(os.urandom(64)).hexdigest()  # Random token based on os.urandom
+    session['_csrf_token'] = csrf_token  # Store token in session
     return csrf_token
 
 @app.route('/static/js/OneSignalSDKWorker.js')
 def serve_worker():
     response = send_from_directory('static/js', 'OneSignalSDKWorker.js')
-    response.headers['Service-Worker-Allowed'] = '/'  
+    response.headers['Service-Worker-Allowed'] = '/'  # Ensure service worker can control the whole domain
     return response
 
 
@@ -78,7 +77,7 @@ google = oauth.register(
 
 
 
-
+# LinkedIn OAuth client setup
 linkedin = oauth.register(
     'linkedin',
     
@@ -92,7 +91,7 @@ linkedin = oauth.register(
     authorize_url='https://www.linkedin.com/uas/oauth/authenticate'
 )
 
-
+# Flask-Login setup
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -101,7 +100,7 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
+# User model
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -120,7 +119,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"<User {self.first_name} {self.last_name}>"
 
-
+# Admin model
 class Admin(db.Model, UserMixin):
     __bind_key__ = 'admins'
     __tablename__ = 'admins'
@@ -131,43 +130,27 @@ class Admin(db.Model, UserMixin):
     def __repr__(self):
         return f'Admin("{self.username}", "{self.id}")'
 
-
+# Routes
 @app.route('/')
 def main():
     return render_template('main.html')
 
 def send_registration_email(user_email):
     message = Mail(
-        from_email='nerosense124@gmail.com',  # Replace with your verified SendGrid sender email
+        from_email='your-email@domain.com',  # Replace with your verified SendGrid sender email
         to_emails=user_email,
-        subject='Welcome to Our Flask App!',
-        plain_text_content=f"""
-Hello and welcome to FutureLMS!
-
-We are thrilled to have you join our community. Thank you for registering with us. 
-You're now part of an exciting journey, and we can't wait to share all the amazing features we have in store.
-
-Please feel free to explore, and don't hesitate to reach out if you have any questions. 
-Our team is always here to help!
-
-We recommend checking out the following:
-- Explore the dashboard
-- Check out your account settings
-- Stay updated with our latest features and news
-
-Once again, welcome aboard!
-
-Best regards,
-The FutureLMS Team
-"""
+        subject='Welcome to Our Flask App',
+        plain_text_content='Thank you for registering with our Flask app! We are excited to have you on board.'
     )
 
-    sg = SendGridAPIClient(api_key=SENDGRID_API_KEY)
-    response = sg.send(message)
-    print(f"Registration email sent to {user_email}")
+    try:
+        sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(f"Registration email sent to {user_email}")
+    except Exception as e:
+        print(f"Error sending email: {e}")
 
-
-
+# Registration route
 @app.route('/register', methods=['GET', 'POST'])
 def reg():
     if request.method== 'GET':
@@ -204,13 +187,13 @@ def reg():
     db.session.add(user)
     db.session.commit()
     send_registration_email(email)
-    flash('registration successful.check your inbox for more details')
-    return redirect(url_for('login'))
-   
+    return redirect(url_for('profile'))
+        
+
           
    
 
-
+# Login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -220,7 +203,7 @@ def login():
         if ema and pas:
             user = User.query.filter_by(email=ema).first()
             if user:
-                if user.status == 1: 
+                if user.status == 1:  # Approved users only
                     if bcrypt.check_password_hash(user.password, pas):
                         login_user(user)
                         flash('Login successful')
@@ -238,7 +221,7 @@ def login():
 
 
 
-
+# Logout route
 @app.route('/logout')
 @login_required
 def logout():
@@ -246,13 +229,13 @@ def logout():
     flash('Logged out successfully')
     return redirect(url_for('main'))
 
-
+# Profile route
 @app.route('/profile')
 @login_required
 def profile():
     return render_template('profile.html')
 
-
+# Update route
 @app.route('/update', methods=['GET', 'POST'])
 @login_required
 def update():
@@ -270,10 +253,10 @@ ALLOWED_EXTENSIONS ={'jpg', 'jpeg', 'png'}
 @login_required
 def updateprofile():
     if request.method == 'POST':
-        
+        # Get the current user record
         pd = User.query.get(current_user.id)
 
-        
+        # Get form data
         fn = request.form['first_name']
         ln = request.form['last_name']
         ga = request.form['grade']
@@ -283,12 +266,12 @@ def updateprofile():
         pa = request.form['password']
         pic = request.files.get('reciept')
 
-       
+        # Handle password update
         if pa:
             hashed_password = bcrypt.generate_password_hash(pa).decode('utf-8')
             pd.password = hashed_password
 
-        
+        # Handle picture upload
         if pic and '.' in pic.filename:
             ext = pic.filename.rsplit('.', 1)[1].lower()
             if ext in ALLOWED_EXTENSIONS:
@@ -299,7 +282,7 @@ def updateprofile():
                 flash('Only JPG, JPEG, and PNG files are allowed.')
                 return redirect(url_for('update'))  # Return to update page if file is invalid
 
-        
+        # Update user information
         pd.first_name = fn
         pd.last_name = ln
         pd.grade = ga
@@ -308,15 +291,15 @@ def updateprofile():
         pd.email = em
 
         try:
-            db.session.commit()  
+            db.session.commit()  # Commit the changes to the database
             flash('Profile updated successfully!', 'success')
-            return redirect(url_for('profile'))  
+            return redirect(url_for('profile'))  # Redirect to profile page after update
         except Exception as e:
             flash(f'An error occurred: {e}', 'danger')
-            return render_template('update.html') 
+            return render_template('update.html')  # Stay on the update page if there's an error
 
-   
-    return render_template('update.html')  
+    # If GET request, just show the update form
+    return render_template('update.html')  # Render update form for the user
 
 
 
@@ -338,7 +321,7 @@ def adminlogin():
             flash('please fill in both field')
     return render_template('admin/adminlogin.html')
 
-
+# Admin section
 @app.route('/admin')
 def admin():
     return render_template('admin/welcome.html')
@@ -375,24 +358,24 @@ def admin_approve(id):
 #
 @app.route('/login/google')
 def login_google():
-   
+    # Generate and store the nonce in the session
     nonce = generate_nonce()
-    session['nonce'] = nonce 
+    session['nonce'] = nonce  # Store the nonce in the session
     
     redirect_uri = url_for('auth', _external=True)
     
-    
+    # Pass the nonce in the authorization request
     return google.authorize_redirect(redirect_uri, nonce=nonce)
 @app.route('/authorized/google')
 def auth():
     try:
-     
+        # Retrieve the nonce from the session
         nonce = session.get('nonce')
         
-     
+        # Get the Google account info
         token = google.authorize_access_token()
         
-
+        # Parse and validate the ID token using the nonce
         user_info = google.parse_id_token(token, nonce=nonce)
         print(user_info)  
        
