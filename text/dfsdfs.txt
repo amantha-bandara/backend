@@ -1,0 +1,1 @@
+mongodb+srv://nerosense124:<db_password>@cluster0.vg1v1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

@@ -1,0 +1,107 @@
+{% include 'admin/admin.html' %}
+{% block content %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Quiz Question</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            font-size: 1.5em;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .form-check-label {
+            font-weight: normal;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-plus-circle"></i> Add a New Quiz Question
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="question">Question</label>
+                    <input type="text" name="question" class="form-control" placeholder="Enter the question here..." required>
+                </div>
+                <div class="form-group">
+                    <label for="option1">Option 1</label>
+                    <input type="text" name="option1" class="form-control" placeholder="Enter Option 1" required>
+                </div>
+                <div class="form-group">
+                    <label for="option2">Option 2</label>
+                    <input type="text" name="option2" class="form-control" placeholder="Enter Option 2" required>
+                </div>
+                <div class="form-group">
+                    <label for="option3">Option 3</label>
+                    <input type="text" name="option3" class="form-control" placeholder="Enter Option 3" required>
+                </div>
+                <div class="form-group">
+                    <label for="correct_answer">Correct Answer</label>
+                    <select name="correct_answer" class="form-control" required>
+                        <option value="A">Option 1</option>
+                        <option value="B">Option 2</option>
+                        <option value="C">Option 3</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Question</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{%endblock%}

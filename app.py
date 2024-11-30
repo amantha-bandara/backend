@@ -9,8 +9,8 @@ from authlib.integrations.flask_client import OAuth
 import logging
 from flask_session import Session
 from werkzeug.utils import secure_filename
-from it_quiz import it_quiz
-from squiz import squiz
+
+
 import os
 from dotenv import load_dotenv
 from flask_wtf.csrf import CSRFProtect
@@ -19,33 +19,43 @@ import hashlib
 import requests
 import sendgrid
 from sendgrid.helpers.mail import Mail, Email, To, Content
+from flask_migrate import Migrate
+
 
 app = Flask(__name__)
+
+ 
 
 
 load_dotenv()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
-app.config['SQLALCHEMY_BINDS'] = {'admins': os.getenv('SQLALCHEMY_BINDS_ADMIN')}
+app.config['SQLALCHEMY_BINDS'] = {
+    'admins': os.getenv('SQLALCHEMY_BINDS_ADMIN'),
+    'teachers' :'sqlite:///teachers.db',
+    'it_quiz' : 'sqlite:///it_quiz.db',
+    'squiz' : 'sqlite:///squiz.db'
+                        
+}
 app.config['SECRET_KEY'] =os.getenv('SECRET_KEY')
 app.config['UPLOADED_IMAGES_DEST'] = 'static/uploads'
 app.config['SERVER_NAME'] = '127.0.0.1:5000'
 app.config['SESSION_COOKIE_NAME'] = 'google-login-session'
 app.config['WTF_CSRF_ENABLED'] = True
-
+SENDGRID_API_KEY =''
  
 images = UploadSet('images', IMAGES)
 configure_uploads(app, images)
 
+
 # Initialize extensions
-db = SQLAlchemy(app)
+
 bcrypt = Bcrypt(app)
 oauth = OAuth(app)
 csrf = CSRFProtect(app)
 load_dotenv()
+db = SQLAlchemy(app)
 
 
-app.register_blueprint(it_quiz, url_prefix='/it-quiz')
-app.register_blueprint(squiz, url_prefix='/squiz')
 
 def generate_nonce():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=16))
@@ -96,10 +106,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
 # User model
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
@@ -109,7 +115,7 @@ class User(db.Model, UserMixin):
     grade = db.Column(db.Integer, nullable=False)
     t_no = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=True, unique=True)
     NIC = db.Column(db.String, nullable=True)
     pic = db.Column(db.String, nullable=True)
     status = db.Column(db.Integer, default=0, nullable=False)
@@ -119,7 +125,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"<User {self.first_name} {self.last_name}>"
 
-# Admin model
+
 class Admin(db.Model, UserMixin):
     __bind_key__ = 'admins'
     __tablename__ = 'admins'
@@ -130,6 +136,86 @@ class Admin(db.Model, UserMixin):
     def __repr__(self):
         return f'Admin("{self.username}", "{self.id}")'
 
+
+
+# Teacher Model
+class Teacher(db.Model):
+    __bind_key__ = 'teachers'
+
+    __tablename__ = 'teachers'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100), nullable=False)
+    full_name = db.Column(db.String(200), nullable=False)
+    common_name = db.Column(db.String(100), nullable=True)
+    grade = db.Column(db.String(50), nullable=True)
+    status = db.Column(db.Integer, default=1)  # 1 = active, 0 = inactive
+    pic = db.Column(db.String(200), nullable=True)  # Path to the profile picture
+    NIC = db.Column(db.String(50), nullable=False)
+    phone = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    fees = db.Column(db.String(100),nullable = False)
+
+
+  
+
+    def __repr__(self):
+        return f'<Teacher {self.full_name}>'
+
+# IT Quiz Model
+class ItQuiz(db.Model):
+    __tablename__ = 'it_quiz'
+    __bind_key__ = 'it_quiz'
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(255), nullable=False)
+    option1 = db.Column(db.String(255), nullable=False)
+    option2 = db.Column(db.String(255), nullable=False)
+    option3 = db.Column(db.String(255), nullable=False)
+    correct_answer = db.Column(db.String(255), nullable=False)
+   
+
+
+
+
+    
+
+# Squiz Model
+class Squiz(db.Model):
+    __tablename__ = 'squiz'
+    __bind_key__ = 'squiz'
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(255), nullable=False)
+    option1 = db.Column(db.String(255), nullable=False)
+    option2 = db.Column(db.String(255), nullable=False)
+    option3 = db.Column(db.String(255), nullable=False)
+    correct_answer = db.Column(db.String(255), nullable=False)
+    
+
+    # Relationship with Teacher table to easily access the teacher object
+    
+   
+
+ 
+
+    def __repr__(self):
+        return f'<Squiz {self.question}>'
+
+
+
+
+
+
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+# User model
+
+
 # Routes
 @app.route('/')
 def main():
@@ -137,7 +223,7 @@ def main():
 
 def send_registration_email(user_email):
     message = Mail(
-        from_email='your-email@domain.com',  # Replace with your verified SendGrid sender email
+        from_email='nerosense124@gmail.com',  # Replace with your verified SendGrid sender email
         to_emails=user_email,
         subject='Welcome to Our Flask App',
         plain_text_content='Thank you for registering with our Flask app! We are excited to have you on board.'
@@ -187,7 +273,7 @@ def reg():
     db.session.add(user)
     db.session.commit()
     send_registration_email(email)
-    return redirect(url_for('profile'))
+    return redirect(url_for('login'))
         
 
           
@@ -247,7 +333,8 @@ def backtoprofile():
 
 ALLOWED_EXTENSIONS ={'jpg', 'jpeg', 'png'}
 
-
+def get():
+    return db,User
 
 @app.route('/updateprofile', methods=['POST', 'GET'])
 @login_required
@@ -394,15 +481,167 @@ def auth():
         flash(f'An error occurred: {e}', 'danger')
         return redirect(url_for('login'))
     
+from sqlalchemy import text
 
-
-
-
-def create_db():
+def create_db_without_foreign_keys():
     with app.app_context():
         db.create_all()
+        
+
+# Run the database creation
+create_db_without_foreign_keys()
 
 
+
+
+
+
+
+
+
+
+
+@app.route('/quiz')
+def quizmain():
+    return render_template('quiz/quizmain.html')
+@app.route('/it quiz')
+def it():
+    itquiz = ItQuiz.query.all()
+    return render_template('quiz/itquiz.html',itquiz=itquiz)
+
+@app.route('/it_quiz/score', methods=['GET', 'POST'])
+def itscore():
+    if request.method == 'POST':
+        print("Form submitted via POST!")
+        score = 0
+        it = ItQuiz.query.all()
+        for index,question in enumerate(it,start = 1):
+            answer = request.form.get(f'question{index}')
+            if answer == question.correct_answer:
+                score += 1
+       
+        user = User.query.filter_by(id = current_user.id).first()
+        if user:
+            user.it_score = score
+            db.session.commit()
+
+        print(f"Final score: {score}")
+        return f'Your score is {score} out of 25.'
+    else:
+        print("Accessing form via GET request")
+        return render_template('quiz/itquiz.html')  
+    
+    
+@app.route('/it_quiz/back',methods = ['GET'])
+def itback():
+    return redirect(url_for('quizmain'))
+
+
+
+
+
+
+@app.route('/squiz/main')
+def sciequiz():
+    squiz = Squiz.query.all()
+    return render_template('squiz/squiz.html',squiz=squiz)
+
+@app.route('/squiz/score', methods=['GET', 'POST'])
+def scienscore():
+    if request.method == 'POST':
+        
+        score = 0
+        sa = Squiz.query.all()
+        for index,question in enumerate(sa,start = 1):
+            answer = request.form.get(f'question{index}')
+            if answer == question.correct_answer:
+                score += 1
+       
+        user = User.query.filter_by(id = current_user.id).first()
+        if user:
+            user.science_score = score
+            db.session.commit()
+
+
+
+        print(f"Final score: {score}")
+        return f'Your score is {score} out of 25.'
+    else:
+        print("Accessing form via GET request")
+        return render_template('squiz/squiz.html')  
+# Run the database creation
+
+@app.route('/added',methods =['GET','POST'])
+@csrf.exempt
+def add_teachers():
+    if request.method == 'GET':
+       return render_template('teachers/register.html')
+    if request.method == 'POST':
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        grade = request.form['grade']
+        t_no = request.form['phone']
+        email = request.form['email']
+        password = request.form['password']
+        fees = request.form['fees']
+        nic = request.form['NIC']
+        common = request.form['common_name']
+        f_name = f'{first_name}{last_name}'
+        
+        
+        hashed_password = bcrypt.generate_password_hash(password,rounds=12)
+        
+        teacher = Teacher.query.filter_by(email=email).first()
+        if teacher is None:
+            teacher = Teacher(
+                first_name =first_name,
+                last_name=last_name,
+                grade=grade,
+                NIC= nic,
+                full_name = f_name,
+                common_name = common,
+                email = email,
+                password = hashed_password,
+                phone = t_no,
+                fees = fees
+                )
+            db.session.add(teacher)
+            db.session.commit()
+            send_registration_email(email)
+            flash('teacher registration successful')
+            return redirect(url_for('add_teachers'))
+        else:
+            flash('email already taken')
+            return redirect(url_for('add_teachers'))
+
+@app.route('/addquiz' ,methods = ['GET','POST'])
+@csrf.exempt
+def addquiz():
+    if request.method =='GET':
+        return render_template('admin/addquiz.html')
+    if request.method == 'POST':
+        ques = request.form['question']
+        op1 = request.form['option1']
+        op2 = request.form['option2']
+        op3 = request.form['option3']
+        ca = request.form['correct_answer']
+
+        itquiz= ItQuiz.query.filter_by(question = ques).first()
+        if itquiz is None:
+            itquiz = ItQuiz(question=ques,option1 =op1,option2=op2,option3 = op3,correct_answer = ca)
+            db.session.add(itquiz)
+            db.session.commit()
+            return redirect(url_for('addquiz'))
+        else:
+            return 'hello'
+        
+
+
+
+   # For Squiz database
+migrate = Migrate(app,db) # Print all IT quiz questions created by this teacher
+
+        
 
 
 if __name__ == '__main__':
