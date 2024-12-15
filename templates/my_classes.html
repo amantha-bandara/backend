@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h3>My Paid Classes</h3>
+    {% if classes %}
+        <div class="row">
+            {% for class in classes %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='uploads/' + class.image_path) }}" class="card-img-top" alt="Class Image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ class.subject }}</h5>
+                            <p class="card-text"><strong>Teacher:</strong> {{ class.teacher }}</p>
+                            <p class="card-text"><strong>Grade:</strong> {{ class.grade }}</p>
+                            <a href="{{ url_for('class_details', class_id=class.id) }}" class="btn btn-primary">View Class</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have not paid for any classes yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

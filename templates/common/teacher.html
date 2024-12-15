@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>LMS-Teacher</title>
+   <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    img{
+        border-radius: 50%;
+    }#heading{
+        color: green;
+    }
+  </style>
+</head>
+<body class="p-3 m-0 border-0 bd-example m-0 border-0">
+    <div class="container">
+        <h3 id="heading">Welcome to LMS <img src="pictures/Logo.jpeg" height="50px" width="50px"></h3>
+        <br><br>
+        <nav class="navbar navbar-dark bg-dark fixed-top">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Learning managment system</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                  </li>
+                  
+                  <li class="nav-item">
+                    <a class="nav-link" href="">Class</a>
+                  </li>
+                  
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Videos</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Students</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="">Questions</a>
+                  </li>
+              </div>
+              </div>
+              </div>
+              </nav>
+              <h4><b>Profile</b></h4>
+        <div class="container text-center">
+            <div class="row">
+              <div class="col">
+                <img src="pictures/student.jpeg" width="250px" height="250px">
+              </div>
+              <div class="col">
+                <div class="mb-3 row">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">First Name:</label>
+                  <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputPassword" value="Wimal" disabled>
+                  </div>
+              </div><div class="mb-3 row">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">Last Name:</label>
+                  <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputPassword" value="Bandara" disabled>
+                  </div>
+              </div>
+              <div class="mb-3 row">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">Email:</label>
+                  <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputPassword" value="wimalbandara@gmail.com" disabled>
+                  </div>
+              </div>
+                <div class="mb-3 row">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Telephone no:</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputPassword" value="0773064826" disabled>
+                </div>
+            </div>
+              <a href="tea_edit.html" type="button" class="btn btn-outline-success">Edit</a>
+              </div>
+              </div>
+            <footer class="py-3 my-4">
+              <hr>
+              <p class="text-center text-body-secondary">&copy; 2024 Company, Inc</p>
+            </footer>
+    </div>
+</body>
+</html>

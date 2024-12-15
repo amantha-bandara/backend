@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h3>Approve Receipts</h3>
+    {% if receipts %}
+        <ul class="list-group">
+            {% for receipt in receipts %}
+                <li class="list-group-item">
+                    <p><strong>Student:</strong> {{ receipt.student_name }}</p>
+                    <p><strong>Class ID:</strong> {{ receipt.class_id }}</p>
+                    
+                    <!-- Admin approves the receipt after checking WhatsApp -->
+                    <form action="{{ url_for('approve_receipt', receipt_id=receipt.id) }}" method="POST">
+                        <button type="submit" class="btn btn-success">Approve</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No pending receipts to approve.</p>
+    {% endif %}
+</div>
+{% endblock %}

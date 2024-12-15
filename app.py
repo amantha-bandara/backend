@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, flash, redirect, url_for, session, abort,send_from_directory,jsonify
+from flask import Flask, request, render_template, flash, redirect, url_for, session, abort, send_from_directory, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
@@ -9,75 +9,63 @@ from authlib.integrations.flask_client import OAuth
 import logging
 from flask_session import Session
 from werkzeug.utils import secure_filename
-
-
+from datetime import datetime
 import os
 from dotenv import load_dotenv
 from flask_wtf.csrf import CSRFProtect
-import time
 import hashlib
 import requests
 import sendgrid
 from sendgrid.helpers.mail import Mail, Email, To, Content
 from flask_migrate import Migrate
-
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
-
- 
-
-
 load_dotenv()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_BINDS'] = {
     'admins': os.getenv('SQLALCHEMY_BINDS_ADMIN'),
-    'teachers' :'sqlite:///teachers.db',
-    'it_quiz' : 'sqlite:///it_quiz.db',
-    'squiz' : 'sqlite:///squiz.db'
-                        
+    'teachers': 'sqlite:///teachers.db',
+    'it_quiz': 'sqlite:///it_quiz.db',
+    'squiz': 'sqlite:///squiz.db',
+    'upload': 'sqlite:///upload.db',
+    'class': 'sqlite:///class.db',
+    're': 'sqlite:///re.db'
 }
-app.config['SECRET_KEY'] =os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['UPLOADED_IMAGES_DEST'] = 'static/uploads'
 app.config['SERVER_NAME'] = '127.0.0.1:5000'
 app.config['SESSION_COOKIE_NAME'] = 'google-login-session'
 app.config['WTF_CSRF_ENABLED'] = True
-SENDGRID_API_KEY =''
- 
+SENDGRID_API_KEY = ''
 images = UploadSet('images', IMAGES)
 configure_uploads(app, images)
-
-
-# Initialize extensions
 
 bcrypt = Bcrypt(app)
 oauth = OAuth(app)
 csrf = CSRFProtect(app)
-load_dotenv()
 db = SQLAlchemy(app)
-
+socket = SocketIO(app)
+migrate = Migrate(app,db)
 
 
 def generate_nonce():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=16))
 
-
 def generate_csrf_token():
-    """Generate a CSRF token using the session data."""
-    csrf_token = hashlib.sha256(os.urandom(64)).hexdigest()  # Random token based on os.urandom
-    session['_csrf_token'] = csrf_token  # Store token in session
+    csrf_token = hashlib.sha256(os.urandom(64)).hexdigest()
+    session['_csrf_token'] = csrf_token
     return csrf_token
 
 @app.route('/static/js/OneSignalSDKWorker.js')
 def serve_worker():
     response = send_from_directory('static/js', 'OneSignalSDKWorker.js')
-    response.headers['Service-Worker-Allowed'] = '/'  # Ensure service worker can control the whole domain
+    response.headers['Service-Worker-Allowed'] = '/'
     return response
-
 
 google = oauth.register(
     name='google',
-    
-    
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     access_token_url='https://accounts.google.com/o/oauth2/token',
     client_kwargs={'scope': 'openid email profile'},
@@ -85,30 +73,35 @@ google = oauth.register(
     jwks_uri='https://www.googleapis.com/oauth2/v3/certs'
 )
 
-
-
-# LinkedIn OAuth client setup
 linkedin = oauth.register(
     'linkedin',
-    
-    request_token_params={
-        'scope': 'openid profile email',
-    },
+    request_token_params={'scope': 'openid profile email'},
     base_url='https://api.linkedin.com/v1/',
-    request_token_url=None,
     access_token_method='POST',
     access_token_url='https://www.linkedin.com/uas/oauth/accessToken',
     authorize_url='https://www.linkedin.com/uas/oauth/authenticate'
 )
 
-# Flask-Login setup
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# User model
+class Tclass(db.Model):
+    __tablename__ = 'tclass'
+    __bind_key__ = 'class'  # This ties the model to the 'class' database
+    id = db.Column(db.Integer, primary_key=True)
+    subject = db.Column(db.String(255), nullable=False)
+    teacher = db.Column(db.String(255), nullable=False)
+    fees = db.Column(db.Float, nullable=False)
+    grade = db.Column(db.String(255), nullable=False)
+    time = db.Column(db.String(255), nullable=False)
+    date = db.Column(db.String(255), nullable=False)
+    image_path = db.Column(db.String(255), nullable=False)
+    
+
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
+   
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
@@ -120,127 +113,104 @@ class User(db.Model, UserMixin):
     pic = db.Column(db.String, nullable=True)
     status = db.Column(db.Integer, default=0, nullable=False)
     it_score = db.Column(db.Integer, default=0, nullable=True)
-    science_score =db.Column(db.Integer, default=0, nullable=True)
-
-    def __repr__(self):
-        return f"<User {self.first_name} {self.last_name}>"
+    science_score = db.Column(db.Integer, default=0, nullable=True)
+    class1 = db.Column(db.Integer, default=0, nullable=True)
+    
 
 
 class Admin(db.Model, UserMixin):
-    __bind_key__ = 'admins'
+    __bind_key__ = 'admins'  # This binds the model to the 'admins' database
     __tablename__ = 'admins'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
 
-    def __repr__(self):
-        return f'Admin("{self.username}", "{self.id}")'
 
-
-
-# Teacher Model
 class Teacher(db.Model):
-    __bind_key__ = 'teachers'
-
+    __bind_key__ = 'teachers'  # This binds the model to the 'teachers' database
     __tablename__ = 'teachers'
-    
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     full_name = db.Column(db.String(200), nullable=False)
     common_name = db.Column(db.String(100), nullable=True)
     grade = db.Column(db.String(50), nullable=True)
-    status = db.Column(db.Integer, default=1)  # 1 = active, 0 = inactive
-    pic = db.Column(db.String(200), nullable=True)  # Path to the profile picture
+    status = db.Column(db.Integer, default=1)
+    pic = db.Column(db.String(200), nullable=True)
     NIC = db.Column(db.String(50), nullable=False)
     phone = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    fees = db.Column(db.String(100),nullable = False)
+    fees = db.Column(db.String(100), nullable=False)
+    subject = db.Column(db.String(100), nullable=False)
 
 
-  
-
-    def __repr__(self):
-        return f'<Teacher {self.full_name}>'
-
-# IT Quiz Model
 class ItQuiz(db.Model):
+    __bind_key__ = 'it_quiz'  # Binds this model to the 'it_quiz' database
     __tablename__ = 'it_quiz'
-    __bind_key__ = 'it_quiz'
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String(255), nullable=False)
     option1 = db.Column(db.String(255), nullable=False)
     option2 = db.Column(db.String(255), nullable=False)
     option3 = db.Column(db.String(255), nullable=False)
     correct_answer = db.Column(db.String(255), nullable=False)
-   
 
 
-
-
-    
-
-# Squiz Model
 class Squiz(db.Model):
+    __bind_key__ = 'squiz'  # Binds this model to the 'squiz' database
     __tablename__ = 'squiz'
-    __bind_key__ = 'squiz'
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String(255), nullable=False)
     option1 = db.Column(db.String(255), nullable=False)
     option2 = db.Column(db.String(255), nullable=False)
     option3 = db.Column(db.String(255), nullable=False)
     correct_answer = db.Column(db.String(255), nullable=False)
+
+
+class Upload(db.Model):
+    __bind_key__ = 'upload'  # Binds this model to the 'upload' database
+    __tablename__ = 'upload'
+    id = db.Column(db.Integer, primary_key=True)
+    tute_name = db.Column(db.String(255), nullable=False)
+    file_name = db.Column(db.String(255), nullable=False)
+    upload_date = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.String(255), nullable=False)
     
+class Receipt(db.Model):
+    __bind_key__ = 're'  # Binds this model to the 'upload' database
+    __tablename__ = 're'
 
-    # Relationship with Teacher table to easily access the teacher object
-    
-   
-
- 
-
-    def __repr__(self):
-        return f'<Squiz {self.question}>'
-
-
-
-
-
-
+    id = db.Column(db.Integer, primary_key=True)
+    student_name = db.Column(db.String(100), nullable=False)
+    class_id = db.Column(db.Integer, nullable=False)
+    receipt_image = db.Column(db.String(150), nullable=True)
+    status = db.Column(db.String(50), default="Pending")  # 'Pending' or 'Approved'
+    payment_date = db.Column(db.String,nullable = False)
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# User model
+def send_registration_email(user_email):
+    message = Mail(
+        from_email='nerosense124@gmail.com',
+        to_emails=user_email,
+        subject='Welcome to Our Flask App',
+        plain_text_content='Thank you for registering with our Flask app!'
+    )
+    try:
+        sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
+        sg.send(message)
+    except Exception as e:
+        print(f"Error sending email: {e}")
 
-
-# Routes
 @app.route('/')
 def main():
     return render_template('main.html')
 
-def send_registration_email(user_email):
-    message = Mail(
-        from_email='nerosense124@gmail.com',  # Replace with your verified SendGrid sender email
-        to_emails=user_email,
-        subject='Welcome to Our Flask App',
-        plain_text_content='Thank you for registering with our Flask app! We are excited to have you on board.'
-    )
-
-    try:
-        sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
-        response = sg.send(message)
-        print(f"Registration email sent to {user_email}")
-    except Exception as e:
-        print(f"Error sending email: {e}")
-
-# Registration route
 @app.route('/register', methods=['GET', 'POST'])
 def reg():
-    if request.method== 'GET':
-        return render_template('register.html')
     if request.method == 'POST':
         first_name = request.form['f_name']
         last_name = request.form['l_name']
@@ -251,35 +221,23 @@ def reg():
         c_password = request.form['password2']
         nic = request.form['NIC']
         
-        hashed_password = bcrypt.generate_password_hash(password,rounds=12)
-
         if password != c_password:
-            flash('Passwords do not match! Please try again.')
+            flash('Passwords do not match!')
             return render_template('register.html')
-        
-        if  User.query.filter_by(email=email).first() :
-            flash('email already exists')
+
+        if User.query.filter_by(email=email).first():
+            flash('Email already exists')
             return render_template('register.html')
-        
-    user=User(
-                password = hashed_password,
-                email = email,
-                NIC = nic,
-                first_name = first_name,
-                last_name = last_name,
-                grade= grade,
-                t_no = t_no
-              )
-    db.session.add(user)
-    db.session.commit()
-    send_registration_email(email)
-    return redirect(url_for('login'))
-        
 
-          
-   
+        hashed_password = bcrypt.generate_password_hash(password, rounds=12)
+        user = User(password=hashed_password, email=email, NIC=nic, first_name=first_name, last_name=last_name, grade=grade, t_no=t_no)
+        db.session.add(user)
+        db.session.commit()
+        send_registration_email(email)
+        return redirect(url_for('login'))
+    return render_template('register.html')
 
-# Login route
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -289,11 +247,11 @@ def login():
         if ema and pas:
             user = User.query.filter_by(email=ema).first()
             if user:
-                if user.status == 1:  # Approved users only
+                if user.status == 1:
                     if bcrypt.check_password_hash(user.password, pas):
                         login_user(user)
                         flash('Login successful')
-                        return redirect(url_for('profile'))
+                        return redirect(url_for('lass'))
                     else:
                         flash("Incorrect password")
                 else:
@@ -304,10 +262,6 @@ def login():
             flash('Please fill in both fields')
     return render_template('login.html')
 
-
-
-
-# Logout route
 @app.route('/logout')
 @login_required
 def logout():
@@ -315,35 +269,29 @@ def logout():
     flash('Logged out successfully')
     return redirect(url_for('main'))
 
-# Profile route
 @app.route('/profile')
 @login_required
 def profile():
+    print(current_user.class1)
     return render_template('profile.html')
 
-# Update route
 @app.route('/update', methods=['GET', 'POST'])
 @login_required
 def update():
     return render_template('update.html')
-@app.route('/backtoprofile', methods=['GET', 'POST'])
 
+@app.route('/backtoprofile')
 def backtoprofile():
     return redirect(url_for('profile'))
 
-ALLOWED_EXTENSIONS ={'jpg', 'jpeg', 'png'}
-
-def get():
-    return db,User
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
 
 @app.route('/updateprofile', methods=['POST', 'GET'])
 @login_required
 def updateprofile():
     if request.method == 'POST':
-        # Get the current user record
         pd = User.query.get(current_user.id)
 
-        # Get form data
         fn = request.form['first_name']
         ln = request.form['last_name']
         ga = request.form['grade']
@@ -353,12 +301,10 @@ def updateprofile():
         pa = request.form['password']
         pic = request.files.get('reciept')
 
-        # Handle password update
         if pa:
             hashed_password = bcrypt.generate_password_hash(pa).decode('utf-8')
             pd.password = hashed_password
 
-        # Handle picture upload
         if pic and '.' in pic.filename:
             ext = pic.filename.rsplit('.', 1)[1].lower()
             if ext in ALLOWED_EXTENSIONS:
@@ -367,9 +313,8 @@ def updateprofile():
                 pd.pic = filename
             else:
                 flash('Only JPG, JPEG, and PNG files are allowed.')
-                return redirect(url_for('update'))  # Return to update page if file is invalid
+                return redirect(url_for('update'))
 
-        # Update user information
         pd.first_name = fn
         pd.last_name = ln
         pd.grade = ga
@@ -378,37 +323,30 @@ def updateprofile():
         pd.email = em
 
         try:
-            db.session.commit()  # Commit the changes to the database
+            db.session.commit()
             flash('Profile updated successfully!', 'success')
-            return redirect(url_for('profile'))  # Redirect to profile page after update
+            return redirect(url_for('profile'))
         except Exception as e:
             flash(f'An error occurred: {e}', 'danger')
-            return render_template('update.html')  # Stay on the update page if there's an error
-
-    # If GET request, just show the update form
-    return render_template('update.html')  # Render update form for the user
-
-
+            return render_template('update.html')
+    return render_template('update.html')
 
 @app.route('/adminlogin')
 def adminlogin():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        hpassword = bcrypt.check_password_hash()
         if bcrypt.check_password_hash(user.password, password):
             user = Admin.query.get(username=username).first()
-            if user is not None:
-                
+            if user:
                 login_user(admin)
                 return redirect('admin')
             else:
-                flash('invalid admin username')
+                flash('Invalid admin username')
         else:
-            flash('please fill in both field')
+            flash('Please fill in both fields')
     return render_template('admin/adminlogin.html')
 
-# Admin section
 @app.route('/admin')
 def admin():
     return render_template('admin/welcome.html')
@@ -427,6 +365,7 @@ def admin_dashboard():
                            total_user=total_user, total_approved=total_approved, total_pending=total_pending)
 
 @app.route('/admin/get-all-user', methods=["POST", "GET"])
+@csrf.exempt
 def admin_get_all_user():
     search = request.form.get('search') if request.method == "POST" else None
     users = User.query.filter(User.first_name.like(f'%{search}%')).all() if search else User.query.all()
@@ -587,6 +526,7 @@ def add_teachers():
         nic = request.form['NIC']
         common = request.form['common_name']
         f_name = f'{first_name}{last_name}'
+        subject = request.form['subject']
         
         
         hashed_password = bcrypt.generate_password_hash(password,rounds=12)
@@ -603,7 +543,8 @@ def add_teachers():
                 email = email,
                 password = hashed_password,
                 phone = t_no,
-                fees = fees
+                fees = fees,
+                subject = subject
                 )
             db.session.add(teacher)
             db.session.commit()
@@ -634,13 +575,203 @@ def addquiz():
             return redirect(url_for('addquiz'))
         else:
             return 'hello'
+@app.route('/view', methods=['GET', 'POST'])
+@csrf.exempt
+def view():
+    if request.method == 'GET':
+        return render_template('teachers/se_te.html')  # This renders the page with subject and grade selection
+    
+    if request.method == 'POST':
+        subject = request.form['category']  # Get the selected subject
+        grade = request.form['branch']  # Get the selected grade
+        if grade == '1':
+            grade =10        # Initialize the teacher query
+        teacher_query = None
         
+        # Filter teachers based on subject and grade
+        if subject == '1':  # Assuming '1' is for 'Science'
+            teacher_query = Teacher.query.filter_by(subject='science', grade=grade).all()
+        elif subject == '2':  # Assuming '2' is for 'IT'
+            teacher_query = Teacher.query.filter_by(subject='it', grade=grade).all()
+
+        # If there are teachers, pass them to the template
+        if teacher_query:
+            print('yes')
+            return render_template('teachers/teachers.html', teachers=teacher_query)  # Pass teachers to the template
+        else:
+            print('none')
+            print(grade)
+            return render_template('teachers/se_te.html', teachers=None, message="No teachers found for this subject and grade.")
+
+        
+@app.route('/upload',methods = ['GET','POST'])
+@csrf.exempt
+def upload():
+    if request.method == 'GET':
+        return render_template('admin/upload.html')
+    if request.method == 'POST':
+        title = request.form['title']
+       
+        description = request.form['description']
+        file = request.files['file']
+
+        if file:
+            filename = os.path.join(app.config['UPLOADED_IMAGES_DEST'],file.filename)
+            file.save(filename)
+
+        upload_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        new_tutorial = Upload(
+                tute_name=title,
+                file_name=file.filename,
+                upload_date=upload_date,
+                description=description,
+               
+            )
+            
+            # Add the new tutorial to the database and commit
+        db.session.add(new_tutorial)
+        db.session.commit()
+            
+        return redirect(url_for('display_tutorials'))
+
+@app.route('/downloads/<filename>')
+def download_file(filename):
+    directory = app.config['UPLOADED_IMAGES_DEST']
+    return send_from_directory(directory, filename, as_attachment=True)
+    
+
+
+# Route to display all tutorials
+@app.route('/tutes')
+def display_tutorials():
+   
+    tutorials = Upload.query.all()  # Get all tutorials from the database
+    return render_template('tutes.html', tutorials=tutorials )
+
+@app.route('/add_class', methods=['GET', 'POST'])
+def add_class():
+    if request.method == 'POST':
+        # Get form data
+        subject = request.form['subject']
+        teacher = request.form['teacher']
+        fees = float(request.form['fees'])
+        grade = request.form['grade']
+        time = request.form['time']
+        day_of_week = request.form['day_of_week']  # Get the selected day of the week
+
+        # Handle image upload
+        pic = request.files['image']
+        if pic and '.' in pic.filename:
+            ext = pic.filename.rsplit('.', 1)[1].lower()
+            if ext in ALLOWED_EXTENSIONS:
+                filename = secure_filename(pic.filename)
+                pic.save(os.path.join(app.config['UPLOADED_IMAGES_DEST'], filename))
+                image_path = filename
+            else:
+                flash('Only JPG, JPEG, and PNG files are allowed.')
+                return redirect(url_for('add_class'))  # Fallback image if none is uploaded
+
+        # Insert new class data into the database
+        new_class = Tclass(
+            subject=subject,
+            teacher=teacher,
+            fees=fees,
+            grade=grade,
+            time=time,
+            date=day_of_week,  # Store the selected day of the week
+            image_path=image_path
+        )
+        
+        db.session.add(new_class)
+        db.session.commit()
+        print('new class added')
+        flash('new class added')
+        return redirect(url_for('lass'))  # Redirect to home page after adding the class
+
+    return render_template('admin/add.html')
+@app.route('/class')
+def lass():
+    # Fetch all classes from the database
+    classes = Tclass.query.all()
+    return render_template('common/classes.html', classes=classes)
+
+@app.route('/class/<int:class_id>')
+def class_details(class_id):
+    # Fetch the class data based on the class_id
+    class_data = Tclass.query.get(class_id)
+    stud = current_user.first_name
+    stu = Receipt.query.filter_by(student_name = stud).first()
+    
+    # Pass the class data to the template with a different variable name
+    return render_template('common/class.html', class_data=class_data,stu = stu)
+
+@app.route('/payment/<int:class_id>')
+def payment(class_id):
+    # Fetch the class details from the database using the class_id
+    class_data = Tclass.query.get_or_404(class_id)
+    
+    # Pass the class data to the payment page
+    return render_template('common/payment.html', class_data=class_data)
 
 
 
+
+@app.route('/my_classes', methods=['GET'])
+def my_classes():
+    student_name = current_user.first_name  # Assuming we have a logged-in user
+    receipts = Receipt.query.filter_by(student_name=student_name, status="Approved").all()
+    
+    # Collect class ids from the approved receipts
+    paid_class_ids = [receipt.class_id for receipt in receipts]
+    paid_classes = Tclass.query.filter(Tclass.id.in_(paid_class_ids)).all()
+    
+    return render_template('my_classes.html', classes=paid_classes)
+@app.route('/add_receipt', methods=['GET', 'POST'])
+@csrf.exempt
+def add_receipt():
+    if request.method == 'POST':
+        student_name = request.form['student_name']
+        class_id = request.form['class_id']
+        payment_date = request.form['payment_date']
+
+        # Call the function to add the receipt to the database
+        new_receipt = Receipt(
+            student_name=student_name,
+            class_id=class_id,
+            payment_date=payment_date,
+            status="Pending"  # Default status is 'Pending'
+        )
+        
+        # Add and commit to the database
+        db.session.add(new_receipt)
+        db.session.commit()
+
+        return redirect(url_for('approve_receipts'))  # Redirect to a page to view receipts (create this route as needed)
+
+    return render_template('add_receipt.html')
+@app.route('/admin/approve_receipts', methods=['GET'])
+@csrf.exempt
+def approve_receipts():
+    # Get all receipts with status 'Pending' 
+    receipts = Receipt.query.filter_by(status="Pending").all()
+    return render_template('approve_receipts.html', receipts=receipts)
+
+@app.route('/admin/approve_receipt/<int:receipt_id>', methods=['POST'])
+@csrf.exempt
+def approve_receipt(receipt_id):
+    receipt = Receipt.query.get_or_404(receipt_id)
+    receipt.status = "Approved"
+    db.session.commit()
+    flash("Receipt approved successfully.")
+    return redirect(url_for('approve_receipts'))
    # For Squiz database
-migrate = Migrate(app,db) # Print all IT quiz questions created by this teacher
+ # Print all IT quiz questions created by this teacher
 
+
+@app.route('/static/js/OneSignalSDKWorker.js')
+def onesignal_worker():
+    directory = os.path.join(app.root_path, 'static/js')
+    return send_from_directory(directory, 'OneSignalSDKWorker.js')
         
 
 

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+      <symbol id="check-circle-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+      </symbol>
+      <symbol id="info-fill" viewBox="0 0 16 16">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+      </symbol>
+      <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+      </symbol>
+    </svg>    
+    <title>Class Details</title>
+    <style>
+        #heading {
+            color: green;
+        }
+        img {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3 id="heading">{{ class_data.subject }} - Class</h3>
+        <ul class="nav nav-underline">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('display_tutorials')}}">Tutes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Quizes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="cla_video.html">Videos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Ask question</a>
+            </li>
+        </ul>
+        <hr>
+        
+        <div class="container text-center my-4">
+            <h4 class="mb-4">Details of the Class</h4>
+            <!-- Themed Container -->
+            <div class="border rounded bg-light shadow-sm p-4">
+                <!-- Flex container -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <!-- Class Details -->
+                    <div class="p-3">
+                        <p><strong>Date:</strong> {{ class_data.date }}</p>
+                        <p><strong>Time:</strong> {{ class_data.time }}</p>
+                        <p><strong>Teacher:</strong> {{ class_data.teacher }}</p>
+                        <p><strong>Fees:</strong> Rs{{ class_data.fees }}</p>
+                        <p><strong>Subject:</strong> {{ class_data.subject }}</p>
+                        <p><strong>Grade:</strong> {{ class_data.grade }}</p>
+                    </div>
+                    <!-- Image -->
+                    <div class="p-3">
+                        <img src="{{ url_for('static', filename='uploads/' + class_data.image_path) }}" 
+                             height="300px" width="300px" class="img-fluid border" alt="Class Logo" style="border-radius: 0;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buy Class Button -->
+        {%if stu%}
+        <div class="text-center my-4">
+            <!-- Add this button where you want it to appear on the class details page -->
+          <a href="#" class="btn btn-primary">Go to Class</a>
+
+        </div>
+        {%else%}
+        <div class="text-center my-4">
+            <!-- Add this button where you want it to appear on the class details page -->
+          <a href="{{ url_for('payment', class_id=class_data.id) }}" class="btn btn-primary">Buy Class</a>
+
+        </div>
+        {%endif%}
+
+        <!-- Notification Section -->
+        <h3 id="heading">Notification</h3>
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+            A simple info alert—check it out!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <footer class="py-3 my-4">
+            <hr>
+            <p class="text-center text-body-secondary">&copy; 2024 Company, Inc</p>
+        </footer>
+    </div>
+</body>
+</html>
+{% endblock %}

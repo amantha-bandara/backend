@@ -56,6 +56,48 @@
             background-color: #34495e;
         }
 
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #2c3e50;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #34495e;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .nested-dropdown {
+            display: none;
+            position: absolute;
+            left: 160px; /* Adjust this value to make nested menu appear to the right */
+            top: 0;
+            background-color: #34495e;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+        }
+
+        .dropdown-content .dropdown:hover .nested-dropdown {
+            display: block;
+        }
+
         /* Responsive Design */
         @media screen and (max-width: 768px) {
             .navbar ul {
@@ -68,103 +110,6 @@
             }
         }
 
-        /* Additional styles for form, table, and content layout */
-        .content {
-            padding: 30px;
-            max-width: 1200px;
-            margin: 30px auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .section {
-            display: none;
-        }
-
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
-
-        form input,
-        form button {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 16px;
-            margin: 10px 0;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            background-color: #ecf0f1;
-        }
-
-        form input:focus,
-        form button:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-
-        form button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        form button:hover {
-            background-color: #2980b9;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #3498db;
-            color: white;
-        }
-
-        td {
-            background-color: #fff;
-        }
-
-        td a {
-            color: #e74c3c;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        td a:hover {
-            text-decoration: underline;
-        }
-
-        .logout-section {
-            text-align: center;
-        }
-
-        .logout-section a {
-            text-decoration: none;
-            color: #3498db;
-            font-size: 18px;
-        }
-
-        .logout-section a:hover {
-            text-decoration: underline;
-        }
-
     </style>
 </head>
 <body>
@@ -174,11 +119,47 @@
             <li><a href="{{url_for('admin_get_all_user')}}">Add User</a></li>
             <li><a href="{{url_for('admin_dashboard')}}">User List</a></li>
             <li><a href="{{url_for('add_teachers')}}">Add Teacher</a></li>
-            <li><a href="{{url_for('addquiz')}}">Add Quiz</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropbtn">Quiz</a>
+                <div class="dropdown-content">
+                    <!-- Add Quiz Section -->
+                    <a href="#">Add Quiz</a>
+                    <div class="dropdown">
+                        <a href="#">Add Science Quiz</a>
+                        <div class="nested-dropdown">
+                            <a href="#">Add Science Quiz</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="#">Add IT Quiz</a>
+                        <div class="nested-dropdown">
+                            <a href="#">Add IT Quiz</a>
+                        </div>
+                    </div>
+
+                    <!-- Delete Quiz Section -->
+                    <a href="#">Delete Quiz</a>
+                    <div class="dropdown">
+                        <a href="#">Delete Science Quiz</a>
+                        <div class="nested-dropdown">
+                            <a href="#">Delete Science Quiz</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="#">Delete IT Quiz</a>
+                        <div class="nested-dropdown">
+                            <a href="#">Delete IT Quiz</a>
+                        </div>
+                    </div>
+                </div>
+            </li>
             <li><a href="{{ url_for('logoutadmin') }}">Logout</a></li>
+            <li><a href="{{url_for('upload')}}">upload</a></li>
+            <li><a href="{{url_for('add_class')}}">classes</a></li>
+
+
         </ul>
     </div>
 
 </body>
 </html>
-

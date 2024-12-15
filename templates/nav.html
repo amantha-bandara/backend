@@ -10,7 +10,7 @@
 
 <nav class="navbar navbar-dark bg-dark fixed-top">
   <div class="container-fluid">
-   <a class = 'navbar-brand'herf ='#'>Dashboard</a>
+   <a class = 'navbar-brand'herf ='#'>LMS</a>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
@@ -30,14 +30,14 @@
             </li>
             
             <li class="nav-item">
-              <a class="nav-link active" href="#">Courses</a>
+              <a class="nav-link active" href="{{url_for('my_classes')}}">My classes</a>
             </li>
             
             <li class="nav-item">
               <a class="nav-link active " href="#">Lessons</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="#">Teachers</a>
+              <a class="nav-link active" href="{{url_for('view')}}">Teachers</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" href="http://www.edupub.gov.lk/BooksDownload.php">Text book downloads</a>

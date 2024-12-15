@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Receipt</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Add Receipt</h2>
+    <form method="POST" action="{{ url_for('add_receipt') }}">
+        <!-- Student Name Input -->
+        <div class="form-group">
+            <label for="student_name">Student Name</label>
+            <input type="text" class="form-control" id="student_name" name="student_name" required>
+        </div>
+
+        <!-- Class ID Input -->
+        <div class="form-group">
+            <label for="class_id">Class ID</label>
+            <input type="number" class="form-control" id="class_id" name="class_id" required>
+        </div>
+
+        <!-- Date Input -->
+        <div class="form-group">
+            <label for="payment_date">Date</label>
+            <input type="date" class="form-control" id="payment_date" name="payment_date" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Receipt</button>
+    </form>
+</div>
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS - Class Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional Bootstrap JS for interactivity -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .class-card {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .class-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .class-img {
+            border-radius: 10px 10px 0 0;
+            max-height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .class-details {
+            padding: 15px;
+        }
+
+        .class-details h5 {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .class-details p {
+            margin-bottom: 5px;
+        }
+
+        .btn-register {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-register:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Available Classes</h2>
+
+    <div class="row">
+        <!-- Class 1 -->
+        <div class="col-md-4">
+            <div class="class-card">
+                <img src="https://via.placeholder.com/300x200?text=Science+Grade+10" class="class-img" alt="Science Grade 10">
+                <div class="class-details">
+                    <h5>Science Grade 10</h5>
+                    <p>Teacher: Mr. John Doe</p>
+                    <p>Time: 9:00 AM - 10:30 AM</p>
+                    <button class="btn-register">Register</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class 2 -->
+        <div class="col-md-4">
+            <div class="class-card">
+                <img src="https://via.placeholder.com/300x200?text=Math+Grade+10" class="class-img" alt="Math Grade 10">
+                <div class="class-details">
+                    <h5>Math Grade 10</h5>
+                    <p>Teacher: Mrs. Jane Smith</p>
+                    <p>Time: 10:45 AM - 12:15 PM</p>
+                    <button class="btn-register">Register</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class 3 -->
+        <div class="col-md-4">
+            <div class="class-card">
+                <img src="https://via.placeholder.com/300x200?text=English+Grade+10" class="class-img" alt="English Grade 10">
+                <div class="class-details">
+                    <h5>English Grade 10</h5>
+                    <p>Teacher: Ms. Emily White</p>
+                    <p>Time: 1:00 PM - 2:30 PM</p>
+                    <button class="btn-register">Register</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class 4 -->
+        <div class="col-md-4">
+            <div class="class-card">
+                <img src="https://via.placeholder.com/300x200?text=History+Grade+10" class="class-img" alt="History Grade 10">
+                <div class="class-details">
+                    <h5>History Grade 10</h5>
+                    <p>Teacher: Mr. Michael Green</p>
+                    <p>Time: 2:45 PM - 4:15 PM</p>
+                    <button class="btn-register">Register</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class 5 -->
+        <div class="col-md-4">
+            <div class="class-card">
+                <img src="https://via.placeholder.com/300x200?text=Geography+Grade+10" class="class-img" alt="Geography Grade 10">
+                <div class="class-details">
+                    <h5>Geography Grade 10</h5>
+                    <p>Teacher: Ms. Sarah Brown</p>
+                    <p>Time: 4:30 PM - 6:00 PM</p>
+                    <button class="btn-register">Register</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class 6 -->
+        <div class="col-md-4">
+            <div class="class-card">
+                <img src="https://via.placeholder.com/300x200?text=Physics+Grade+10" class="class-img" alt="Physics Grade 10">
+                <div class="class-details">
+                    <h5>Physics Grade 10</h5>
+                    <p>Teacher: Mr. Thomas Black</p>
+                    <p>Time: 6:15 PM - 7:45 PM</p>
+                    <button class="btn-register">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+{%endblock%}
